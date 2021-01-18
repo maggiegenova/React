@@ -1,42 +1,34 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import faker from "faker";
-import CommentDetail from "./comment-detail-component";
-import ApprovalCard from "./approval-card-component";
 
-const App = () => {
-  return (
-    <div className="ui container comments">
-      <ApprovalCard>
-        <CommentDetail
-          author="Sam"
-          avatar={faker.image.image()}
-          comment="Nice blog post"
-          date="Today at 6:00PM"
-        />
-      </ApprovalCard>
+class App extends React.Component {
+  //good place to initialize the state
+  constructor(props) {
+    super(props);
 
-      <ApprovalCard>
-        <CommentDetail
-          author="Alex"
-          avatar={faker.image.image()}
-          comment="Nice job!"
-          date="Yesterday at 1:00PM"
-        />
-      </ApprovalCard>
+    //initlize state by creating object
+    this.state = { lat: null, errorMessage: "" };
 
-      <ApprovalCard>
-        <CommentDetail
-          author="Jane"
-          avatar={faker.image.image()}
-          comment="Good work :)"
-          date="Tuesday at 6:00PM"
-        />
-      </ApprovalCard>
+    window.navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({ lat: position.coords.latitude });
+      },
+      (err) => {
+        this.setState({ errorMessage: err.message });
+      }
+    );
+  }
 
-      <ApprovalCard>Are you sure you want to do this?</ApprovalCard>
-    </div>
-  );
-};
+  //We have to define render method when defining class
+  render() {
+    if (this.state.errorMessage && !this.state.lat) {
+      return <div>Error:{this.state.errorMessage}</div>;
+    }
+    if (!this.state.errorMessage && this.state.lat) {
+      return <div>Latitude: {this.state.lat}</div>;
+    }
+    return <div>Loading!</div>;
+  }
+}
 
 ReactDOM.render(<App />, document.querySelector("#root"));
