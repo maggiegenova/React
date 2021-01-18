@@ -1,14 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import SeasonDisplay from "./season-display-component";
+import Loader from "./loader-component";
 
 class App extends React.Component {
-  //good place to initialize the state
-  constructor(props) {
-    super(props);
+  state = { lat: null, errorMessage: "" };
 
-    //initlize state by creating object
-    this.state = { lat: null, errorMessage: "" };
-
+  componentDidMount() {
     window.navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({ lat: position.coords.latitude });
@@ -19,15 +17,19 @@ class App extends React.Component {
     );
   }
 
-  //We have to define render method when defining class
-  render() {
+  renderContent() {
     if (this.state.errorMessage && !this.state.lat) {
       return <div>Error:{this.state.errorMessage}</div>;
     }
     if (!this.state.errorMessage && this.state.lat) {
-      return <div>Latitude: {this.state.lat}</div>;
+      return <SeasonDisplay lat={this.state.lat} />;
     }
-    return <div>Loading!</div>;
+    return <Loader message="Please accept location request" />;
+  }
+
+  //We have to define render method when defining class
+  render() {
+    return <div>{this.renderContent()}</div>;
   }
 }
 
