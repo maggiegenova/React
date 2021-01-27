@@ -3,6 +3,8 @@ import Accordion from "./accordion-component";
 import Search from "./search-bar-component";
 import DropDown from "./drop-down-component";
 import Translate from "./translate-component";
+import Route from "./route-component";
+import Header from "./header-component";
 
 const items = [
   {
@@ -39,7 +41,24 @@ export default () => {
 
   return (
     <div>
-      <Translate />
+      <Header />
+      <Route path="/">
+        <Accordion items={items} />
+      </Route>
+      <Route path="/list">
+        <Search />
+      </Route>
+      <Route path="/dropdown">
+        <DropDown
+          label="Select a color"
+          options={options}
+          selected={selected}
+          onSelectedChange={setSelected}
+        />
+      </Route>
+      <Route path="/translate">
+        <Translate />
+      </Route>
     </div>
   );
 };
