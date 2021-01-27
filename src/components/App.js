@@ -1,64 +1,35 @@
-import React, { useState } from "react";
-import Accordion from "./accordion-component";
-import Search from "./search-bar-component";
-import DropDown from "./drop-down-component";
-import Translate from "./translate-component";
-import Route from "./route-component";
-import Header from "./header-component";
+import React, { useState, useEffect } from "react";
+import SearchBar from "./search-bar-component";
+import VideoList from "./video-list-component";
+import VideoDetails from "./video-detail-component";
+import useVideos from "../hooks/useVideos";
 
-const items = [
-  {
-    title: "What is React?",
-    content: "React is a front-end js framework.",
-  },
-  {
-    title: "Why use React?",
-    content: "React is a favourite js library among developers.",
-  },
-  {
-    title: "How do you use React?",
-    content: "You use React by creating components.",
-  },
-];
+const App = () => {
+  const [videos, search] = useVideos("cats"); //expects default search term as argument
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
-const options = [
-  {
-    label: "The color Red",
-    value: "red",
-  },
-  {
-    label: "The color Green",
-    value: "green",
-  },
-  {
-    label: "A shade of Blue",
-    value: "blue",
-  },
-];
-
-export default () => {
-  const [selected, setSelected] = useState(options[0]);
+  useEffect(() => {
+    setSelectedVideo(videos[0]);
+  }, [videos]);
 
   return (
-    <div>
-      <Header />
-      <Route path="/">
-        <Accordion items={items} />
-      </Route>
-      <Route path="/list">
-        <Search />
-      </Route>
-      <Route path="/dropdown">
-        <DropDown
-          label="Select a color"
-          options={options}
-          selected={selected}
-          onSelectedChange={setSelected}
-        />
-      </Route>
-      <Route path="/translate">
-        <Translate />
-      </Route>
+    <div className="ui container">
+      <SearchBar onFormSubmit={search} />
+      <div className="ui grid">
+        <div className="ui row">
+          <div className="eleven wide column">
+            {" "}
+            <VideoDetails video={selectedVideo} />
+          </div>
+          <div className="five wide column">
+            <VideoList onVideoSelect={setSelectedVideo} videos={videos} />
+          </div>
+        </div>
+      </div>
+
+      {/* the results from the search will be stored in 'videos' and that's why we pass the elements to the component */}
     </div>
   );
 };
+
+export default App;
