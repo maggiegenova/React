@@ -1,33 +1,19 @@
-import React, { useState, useEffect } from "react";
-import SearchBar from "./search-bar-component";
-import VideoList from "./video-list-component";
-import VideoDetails from "./video-detail-component";
-import useVideos from "../hooks/useVideos";
+import React from "react";
+import SongList from "./song-list-component";
+import SongDetail from "./song-details-component";
+//import { selectSong } from "../actions"; // because it is named export, we place {} when importing
 
 const App = () => {
-  const [videos, search] = useVideos("cats"); //expects default search term as argument
-  const [selectedVideo, setSelectedVideo] = useState(null);
-
-  useEffect(() => {
-    setSelectedVideo(videos[0]);
-  }, [videos]);
-
   return (
-    <div className="ui container">
-      <SearchBar onFormSubmit={search} />
-      <div className="ui grid">
-        <div className="ui row">
-          <div className="eleven wide column">
-            {" "}
-            <VideoDetails video={selectedVideo} />
-          </div>
-          <div className="five wide column">
-            <VideoList onVideoSelect={setSelectedVideo} videos={videos} />
-          </div>
+    <div className="ui container grid">
+      <div className="ui row">
+        <div className="column eight wide">
+          <SongList />
+        </div>
+        <div className="column eight wide">
+          <SongDetail />
         </div>
       </div>
-
-      {/* the results from the search will be stored in 'videos' and that's why we pass the elements to the component */}
     </div>
   );
 };
