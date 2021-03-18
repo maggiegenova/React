@@ -1,35 +1,26 @@
-import React, { useState, useEffect } from "react";
-import SearchBar from "./search-bar-component";
-import VideoList from "./video-list-component";
-import VideoDetails from "./video-detail-component";
-import useVideos from "../hooks/useVideos";
+import React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import StreamCreate from "./streams/StreamCreate";
+import StreamDelete from "./streams/StreamDelete";
+import StreamEdit from "./streams/StreamEdit";
+import StreamList from "./streams/StreamList";
+import StreamShow from "./streams/StreamShow";
+import Header from "./Header";
 
 const App = () => {
-  const [videos, search] = useVideos("cats"); //expects default search term as argument
-  const [selectedVideo, setSelectedVideo] = useState(null);
-
-  useEffect(() => {
-    setSelectedVideo(videos[0]);
-  }, [videos]);
-
   return (
     <div className="ui container">
-      <SearchBar onFormSubmit={search} />
-      <div className="ui grid">
-        <div className="ui row">
-          <div className="eleven wide column">
-            {" "}
-            <VideoDetails video={selectedVideo} />
-          </div>
-          <div className="five wide column">
-            <VideoList onVideoSelect={setSelectedVideo} videos={videos} />
-          </div>
+      <BrowserRouter>
+        <div>
+          <Header />
+          <Route path="/" exact component={StreamList} />
+          <Route path="/streams/new" exact component={StreamCreate} />
+          <Route path="/streams/edit" exact component={StreamEdit} />
+          <Route path="/streams/delete" exact component={StreamDelete} />
+          <Route path="/streams/show" exact component={StreamShow} />
         </div>
-      </div>
-
-      {/* the results from the search will be stored in 'videos' and that's why we pass the elements to the component */}
+      </BrowserRouter>
     </div>
   );
 };
-
 export default App;
